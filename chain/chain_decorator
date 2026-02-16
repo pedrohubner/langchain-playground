@@ -1,0 +1,23 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model="gpt-5.2", temperature=0.3)
+
+def square(numbers_dict:dict) -> dict:
+    x = numbers_dict["x"]
+    return { "square": x * x }
+
+prompt = ChatPromptTemplate([
+    "system", "Você é um historiador que entende bastante de química e matemática, que consegue passar conteúdo de forma divertida.",
+    "user", "Me diga fatos interessantes sobre o número {square}"
+])
+
+chain = square | prompt | llm
+
+result = chain.invoke({"x": 10})
+
+print(result.content)
